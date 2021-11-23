@@ -4,5 +4,5 @@ Aplicativo desktop para gerenciamento de biblioteca.
 
 Tecnologias:
  - Java
- -JavaFX
- -SQLite
+ - JavaFX
+ - SQLite
