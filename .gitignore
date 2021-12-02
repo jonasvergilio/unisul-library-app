@@ -1,3 +1,5 @@
-/.metadata/
-target
+.metadata
 bin
+target
+
+.classpath
