@@ -1,4 +1,4 @@
-package br.unisul.library.java.util;
+package br.unisul.library.util;
 
 import java.io.File;
 import java.sql.Connection;

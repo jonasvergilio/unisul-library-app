@@ -1,0 +1,10 @@
+CREATE TABLE cliente (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome       VARCHAR,
+    cpf        VARCHAR UNIQUE,
+    nascimento VARCHAR,
+    telefone   VARCHAR,
+    email   VARCHAR
+);
+
+/*==========================================================*/
