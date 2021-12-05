@@ -26,33 +26,23 @@ public class ClienteController {
 	}
 
 	private void insertCliente() {
-		Cliente cliente = lerTela();
-		String sql = "insert into cliente (nome, cpf, nascimento, telefone, email) values (?,?,?,?,?)";
+		String sql = "INSERT INTO cliente (nome, cpf, nascimento, telefone, email) VALUES (?, ?, ?, ?, ?)";
+		
 		try {
-			Connection con = Conexao.conectaSqlite();
-			PreparedStatement ps = con.prepareStatement(sql);
+			Connection connection = Conexao.conectaSqlite();
+			PreparedStatement ps = connection.prepareStatement(sql);
 			
-			ps.setString(1, cliente.getNome());
-			ps.setString(2, cliente.getCpf());
-			ps.setString(3, cliente.getNascimento());
-			ps.setString(4, cliente.getTelefone());
-			ps.setString(5, cliente.getEmail());
+			ps.setString(1, txtNome.getText());
+			ps.setString(2, txtCpf.getText());
+			ps.setString(3, txtNascimento.getText());
+			ps.setString(4, txtTelefone.getText());
+			ps.setString(5, txtEmail.getText());
 			
 			ps.executeUpdate();
 			
-			con.close();
+			connection.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	private Cliente lerTela() {
-		Cliente cliente = new Cliente();
-		cliente.setNome(txtNome.getText());
-		cliente.setCpf(txtCpf.getText());
-		cliente.setNascimento(txtNascimento.getText());
-		cliente.setTelefone(txtTelefone.getText());
-		cliente.setEmail(txtEmail.getText());
-		return cliente;
 	}
 }
