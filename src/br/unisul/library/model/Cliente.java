@@ -13,9 +13,9 @@ public class Cliente {
 	private StringProperty telefone = new SimpleStringProperty("");
 	private StringProperty email = new SimpleStringProperty("");
 	
-	Cliente() {};
+	public Cliente() {};
 	
-	Cliente(int id, String nome, String cpf, String nascimento, String telefone, String email) {
+	public Cliente(int id, String nome, String cpf, String nascimento, String telefone, String email) {
 		setId(id);
 		setNome(nome);
 		setCpf(cpf);
@@ -24,7 +24,7 @@ public class Cliente {
 		setEmail(email);
 	};
 	
-	Cliente(String nome, String cpf, String nascimento, String telefone, String email) {
+	public Cliente(String nome, String cpf, String nascimento, String telefone, String email) {
 		setNome(nome);
 		setCpf(cpf);
 		setNascimento(nascimento);

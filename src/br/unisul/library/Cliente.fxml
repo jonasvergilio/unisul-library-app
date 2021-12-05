@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.unisul.library.ClienteController">
+<AnchorPane prefHeight="528.0" prefWidth="1003.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.unisul.library.ClienteController">
    <children>
       <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -68,7 +68,7 @@
                         <Insets left="10.0" />
                      </VBox.margin>
                   </TextField>
-                  <Button mnemonicParsing="false" onAction="#salva" text="Salvar">
+                  <Button mnemonicParsing="false" onAction="#save" text="Salvar">
                      <VBox.margin>
                         <Insets left="10.0" top="10.0" />
                      </VBox.margin>
@@ -79,7 +79,7 @@
                </padding>
             </VBox>
             <Separator orientation="VERTICAL" prefHeight="200.0" />
-            <VBox prefHeight="518.0" prefWidth="623.0">
+            <VBox prefHeight="518.0" prefWidth="792.0">
                <children>
                   <HBox prefHeight="64.0" prefWidth="616.0">
                      <children>
@@ -98,14 +98,14 @@
                         <Insets top="10.0" />
                      </padding>
                   </HBox>
-                  <TableView>
+                  <TableView fx:id="clienteTable" onMouseClicked="#selectCliente" prefHeight="400.0" prefWidth="731.0">
                     <columns>
-                      <TableColumn prefWidth="48.0" text="Código" />
-                      <TableColumn minWidth="3.0" prefWidth="114.0" text="Nome" />
-                        <TableColumn minWidth="0.0" prefWidth="105.0" text="CPF" />
-                        <TableColumn prefWidth="120.0" text="Data de Nascimento" />
-                        <TableColumn prefWidth="96.0" text="Telefone" />
-                        <TableColumn prefWidth="127.0" text="E-mail" />
+                      <TableColumn fx:id="colCodigo" prefWidth="48.0" text="Código" />
+                      <TableColumn fx:id="colNome" minWidth="3.0" prefWidth="114.0" text="Nome" />
+                        <TableColumn fx:id="colCpf" minWidth="0.0" prefWidth="105.0" text="CPF" />
+                        <TableColumn fx:id="colNascimento" prefWidth="120.0" text="Data de Nascimento" />
+                        <TableColumn fx:id="colTelefone" prefWidth="96.0" text="Telefone" />
+                        <TableColumn fx:id="colEmail" prefWidth="127.0" text="E-mail" />
                     </columns>
                      <VBox.margin>
                         <Insets right="5.0" />
