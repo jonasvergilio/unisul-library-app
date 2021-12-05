@@ -6,13 +6,32 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class Cliente {
-	
 	private IntegerProperty id = new SimpleIntegerProperty(0);
 	private StringProperty nome = new SimpleStringProperty("");
 	private StringProperty cpf = new SimpleStringProperty("");
 	private StringProperty nascimento = new SimpleStringProperty("");
 	private StringProperty telefone = new SimpleStringProperty("");
 	private StringProperty email = new SimpleStringProperty("");
+	
+	Cliente() {};
+	
+	Cliente(int id, String nome, String cpf, String nascimento, String telefone, String email) {
+		setId(id);
+		setNome(nome);
+		setCpf(cpf);
+		setNascimento(nascimento);
+		setTelefone(telefone);
+		setEmail(email);
+	};
+	
+	Cliente(String nome, String cpf, String nascimento, String telefone, String email) {
+		setNome(nome);
+		setCpf(cpf);
+		setNascimento(nascimento);
+		setTelefone(telefone);
+		setEmail(email);
+	};
+	
 	public final IntegerProperty idProperty() {
 		return this.id;
 	}
@@ -84,8 +103,4 @@ public class Cliente {
 	public final void setEmail(final String email) {
 		this.emailProperty().set(email);
 	}
-	
-	
-	
-	
 }
