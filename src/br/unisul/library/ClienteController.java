@@ -26,6 +26,9 @@ public class ClienteController {
 	TextField txtEmail;
 	
 	@FXML
+	TextField txtFiltro;
+	
+	@FXML
 	TableView<Cliente> clienteTable;
 	
 	@FXML
@@ -92,6 +95,39 @@ public class ClienteController {
 		}
 		
 		clearClienteScreen();
+	}
+	
+	@FXML
+	public void selectClienteFilteringByName() {
+		if (txtFiltro.getText().trim() == "") {
+			selectAll();
+		} else {
+			String sqlSelectAllByName = "SELECT * FROM cliente WHERE nome LIKE ? ORDER BY id";
+
+			try {
+				Connection connection = Conexao.conectaSqlite();
+
+				PreparedStatement ps = connection.prepareStatement(sqlSelectAllByName);
+
+				ps.setString(1, txtFiltro.getText() + "%");
+
+				ResultSet result = ps.executeQuery();
+
+				clientes = new ArrayList<Cliente>();
+
+				while (result.next()) {
+					Cliente cliente = new Cliente(result.getInt("id"), result.getString("nome"), result.getString("cpf"), result.getString("nascimento"), result.getString("telefone"), result.getString("email"));
+
+					clientes.add(cliente);
+				}
+
+				connection.close();
+
+				clienteTable.setItems(FXCollections.observableArrayList(clientes));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	// Private methods
