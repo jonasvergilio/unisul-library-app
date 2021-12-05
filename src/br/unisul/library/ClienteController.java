@@ -50,6 +50,7 @@ public class ClienteController {
 	private Cliente selectedCliente = null;
 
 	// Public methods
+
 	@FXML
 	public void initialize() {
 	    colCodigo.setCellValueFactory(cellData -> cellData.getValue().idProperty());
@@ -66,6 +67,10 @@ public class ClienteController {
 	public void save() {
 		if(selectedCliente == null) {
 			insertCliente();
+		} else {
+			update();
+
+			clearClienteScreen();
 		}
 	}
 	
@@ -86,6 +91,12 @@ public class ClienteController {
 			}
 		}
 		
+		clearClienteScreen();
+	}
+	
+	// Private methods
+	
+	private void clearClienteScreen() {
 		selectedCliente = null;
 		clienteTable.getSelectionModel().clearSelection();
 
@@ -95,21 +106,31 @@ public class ClienteController {
 		txtTelefone.setText("");
 		txtEmail.setText("");
 	}
-	
-	// Private methods
 
+	private Cliente getClienteScreen() {
+		Cliente cliente = new Cliente(txtNome.getText(), txtCpf.getText(), txtNascimento.getText(), txtTelefone.getText(), txtEmail.getText());
+
+		if (selectedCliente != null) {
+			cliente.setId(selectedCliente.getId());
+		}
+
+		return cliente;
+	}
+	
 	private void insertCliente() {
 		String sql = "INSERT INTO cliente (nome, cpf, nascimento, telefone, email) VALUES (?, ?, ?, ?, ?)";
+		
+		Cliente cliente = getClienteScreen();
 		
 		try {
 			Connection connection = Conexao.conectaSqlite();
 			PreparedStatement ps = connection.prepareStatement(sql);
 			
-			ps.setString(1, txtNome.getText());
-			ps.setString(2, txtCpf.getText());
-			ps.setString(3, txtNascimento.getText());
-			ps.setString(4, txtTelefone.getText());
-			ps.setString(5, txtEmail.getText());
+			ps.setString(1, cliente.getNome());
+			ps.setString(2, cliente.getCpf());
+			ps.setString(3, cliente.getNascimento());
+			ps.setString(4, cliente.getTelefone());
+			ps.setString(5, cliente.getEmail());
 			
 			ps.executeUpdate();
 			
@@ -144,4 +165,31 @@ public class ClienteController {
 	      e.printStackTrace();
 	    }
 	  }
+
+	private void update() {
+		String updateSql = "UPDATE cliente SET nome=?, cpf=?, nascimento=?, telefone=?, email=? WHERE id=?";
+
+		Cliente cliente = getClienteScreen();
+
+		try {
+			Connection connection = Conexao.conectaSqlite();
+
+			PreparedStatement ps = connection.prepareStatement(updateSql);
+
+			ps.setString(1, cliente.getNome());
+			ps.setString(2, cliente.getCpf());
+			ps.setString(3, cliente.getNascimento());
+			ps.setString(4, cliente.getTelefone());
+			ps.setString(5, cliente.getEmail());
+			ps.setInt(6, cliente.getId());
+
+			ps.executeUpdate();
+
+			connection.close();
+
+			selectAll();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
