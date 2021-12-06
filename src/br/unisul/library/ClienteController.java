@@ -24,13 +24,13 @@ public class ClienteController {
 	TextField txtTelefone;
 	@FXML
 	TextField txtEmail;
-	
+
 	@FXML
 	TextField txtFiltro;
-	
+
 	@FXML
 	TableView<Cliente> clienteTable;
-	
+
 	@FXML
 	TableColumn<Cliente, Number> colCodigo;
 
@@ -39,13 +39,13 @@ public class ClienteController {
 
 	@FXML
 	TableColumn<Cliente, String> colCpf;
-	
+
 	@FXML
 	TableColumn<Cliente, String> colNascimento;
-	
+
 	@FXML
 	TableColumn<Cliente, String> colTelefone;
-	
+
 	@FXML
 	TableColumn<Cliente, String> colEmail;
 
@@ -56,21 +56,21 @@ public class ClienteController {
 
 	@FXML
 	public void initialize() {
-	    colCodigo.setCellValueFactory(cellData -> cellData.getValue().idProperty());
-	    colNome.setCellValueFactory(cellData -> cellData.getValue().nomeProperty());
-	    colCpf.setCellValueFactory(cellData -> cellData.getValue().cpfProperty());
-	    colNascimento.setCellValueFactory(cellData -> cellData.getValue().nascimentoProperty());
-	    colTelefone.setCellValueFactory(cellData -> cellData.getValue().telefoneProperty());
-	    colEmail.setCellValueFactory(cellData -> cellData.getValue().emailProperty());
+		colCodigo.setCellValueFactory(cellData -> cellData.getValue().idProperty());
+		colNome.setCellValueFactory(cellData -> cellData.getValue().nomeProperty());
+		colCpf.setCellValueFactory(cellData -> cellData.getValue().cpfProperty());
+		colNascimento.setCellValueFactory(cellData -> cellData.getValue().nascimentoProperty());
+		colTelefone.setCellValueFactory(cellData -> cellData.getValue().telefoneProperty());
+		colEmail.setCellValueFactory(cellData -> cellData.getValue().emailProperty());
 
-	    selectAll();
+		selectAll();
 	}
 
 	@FXML
 	public void save() {
-		if(selectedCliente == null) {
+		if (selectedCliente == null) {
 			insert();
-			
+
 			clearClienteScreen();
 		} else {
 			update();
@@ -78,7 +78,7 @@ public class ClienteController {
 			clearClienteScreen();
 		}
 	}
-	
+
 	public void selectCliente() {
 		Cliente selectedItem = clienteTable.getSelectionModel().getSelectedItem();
 
@@ -95,10 +95,10 @@ public class ClienteController {
 				return;
 			}
 		}
-		
+
 		clearClienteScreen();
 	}
-	
+
 	@FXML
 	public void selectClienteFilteringByName() {
 		if (txtFiltro.getText().trim() == "") {
@@ -118,7 +118,9 @@ public class ClienteController {
 				clientes = new ArrayList<Cliente>();
 
 				while (result.next()) {
-					Cliente cliente = new Cliente(result.getInt("id"), result.getString("nome"), result.getString("cpf"), result.getString("nascimento"), result.getString("telefone"), result.getString("email"));
+					Cliente cliente = new Cliente(result.getInt("id"), result.getString("nome"),
+							result.getString("cpf"), result.getString("nascimento"), result.getString("telefone"),
+							result.getString("email"));
 
 					clientes.add(cliente);
 				}
@@ -131,9 +133,9 @@ public class ClienteController {
 			}
 		}
 	}
-	
+
 	// Private methods
-	
+
 	private void clearClienteScreen() {
 		selectedCliente = null;
 		clienteTable.getSelectionModel().clearSelection();
@@ -146,17 +148,16 @@ public class ClienteController {
 	}
 
 	private Cliente getClienteScreen() {
-		String nome = txtNome.getText().trim(),
-				cpf = txtCpf.getText().trim(),
-				nascimento = txtNascimento.getText().trim(),
-				telefone = txtTelefone.getText().trim(),
+		String nome = txtNome.getText().trim(), cpf = txtCpf.getText().trim(),
+				nascimento = txtNascimento.getText().trim(), telefone = txtTelefone.getText().trim(),
 				email = txtEmail.getText().trim();
-		
-		if(nome == "" || cpf == "" || nascimento == "" || telefone == "" || email == "") {
-			System.out.println("Todos os campos são obrigatório!!");
-			
+
+		if (nome == "" || cpf == "" || nascimento == "" || telefone == "" || email == "") {
+			System.out.println("Todos os campos são obrigatórios!!");
+
 			return null;
-		};
+		}
+		;
 
 		Cliente cliente = new Cliente(nome, cpf, nascimento, telefone, email);
 
@@ -166,86 +167,113 @@ public class ClienteController {
 
 		return cliente;
 	}
-	
+
 	private void insert() {
 		String sql = "INSERT INTO cliente (nome, cpf, nascimento, telefone, email) VALUES (?, ?, ?, ?, ?)";
-		
+
 		Cliente cliente = getClienteScreen();
-		
+
 		if (cliente != null) {
 			try {
 				Connection connection = Conexao.conectaSqlite();
 				PreparedStatement ps = connection.prepareStatement(sql);
-				
+
 				ps.setString(1, cliente.getNome());
 				ps.setString(2, cliente.getCpf());
 				ps.setString(3, cliente.getNascimento());
 				ps.setString(4, cliente.getTelefone());
 				ps.setString(5, cliente.getEmail());
-				
+
 				ps.executeUpdate();
-				
+
 				connection.close();
-				
+
 				selectAll();
 			} catch (Exception e) {
 				e.printStackTrace();
-			}			
+			}
 		}
 	}
-	
+
 	private void selectAll() {
-	    String sqlSelectAll = "SELECT * FROM cliente";
+		String sqlSelectAll = "SELECT * FROM cliente";
 
-	    try {
-	      Connection connection = Conexao.conectaSqlite();
+		try {
+			Connection connection = Conexao.conectaSqlite();
 
-	      PreparedStatement ps = connection.prepareStatement(sqlSelectAll);
+			PreparedStatement ps = connection.prepareStatement(sqlSelectAll);
 
-	      ResultSet result = ps.executeQuery();
+			ResultSet result = ps.executeQuery();
 
-	      clientes = new ArrayList<Cliente>();
+			clientes = new ArrayList<Cliente>();
 
-	      while (result.next()) {
-	        Cliente cliente = new Cliente(result.getInt("id"), result.getString("nome"), result.getString("cpf"), result.getString("nascimento"), result.getString("telefone"), result.getString("email"));
+			while (result.next()) {
+				Cliente cliente = new Cliente(result.getInt("id"), result.getString("nome"), result.getString("cpf"),
+						result.getString("nascimento"), result.getString("telefone"), result.getString("email"));
 
-	        clientes.add(cliente);
-	      }
+				clientes.add(cliente);
+			}
 
-	      connection.close();
+			connection.close();
 
-	      clienteTable.setItems(FXCollections.observableArrayList(clientes));
-	    } catch (Exception e) {
-	      e.printStackTrace();
-	    }
-	  }
+			clienteTable.setItems(FXCollections.observableArrayList(clientes));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	private void update() {
 		String updateSql = "UPDATE cliente SET nome=?, cpf=?, nascimento=?, telefone=?, email=? WHERE id=?";
 
 		Cliente cliente = getClienteScreen();
-		
+
 		if (cliente != null) {
 			try {
 				Connection connection = Conexao.conectaSqlite();
-				
+
 				PreparedStatement ps = connection.prepareStatement(updateSql);
-				
+
 				ps.setString(1, cliente.getNome());
 				ps.setString(2, cliente.getCpf());
 				ps.setString(3, cliente.getNascimento());
 				ps.setString(4, cliente.getTelefone());
 				ps.setString(5, cliente.getEmail());
 				ps.setInt(6, cliente.getId());
-				
+
 				ps.executeUpdate();
-				
+
 				connection.close();
-				
+
 				selectAll();
 			} catch (Exception e) {
 				e.printStackTrace();
-			}			
+			}
+		}
+	}
+	
+	@FXML
+	private void delete() {
+		String sqlDelete = "delete from cliente where id=?";
+
+		Cliente cliente = getClienteScreen();
+
+		if (cliente != null) {
+			try {
+				Connection connection = Conexao.conectaSqlite();
+				PreparedStatement ps = connection.prepareStatement(sqlDelete);
+
+				ps.setInt(1, selectedCliente.getId());
+
+				ps.executeUpdate();
+
+				connection.close();
+
+				selectAll();
+				
+				clearClienteScreen();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }
