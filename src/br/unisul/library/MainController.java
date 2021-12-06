@@ -6,7 +6,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 
-public class SampleController {
+public class MainController {
 	
 	@FXML TabPane pane;
 	
@@ -23,6 +23,28 @@ public class SampleController {
 				tab.setClosable(true);
 				pane.getTabs().add(tab);
 				tab.setContent((Node) FXMLLoader.load(getClass().getResource("Cliente.fxml")));
+				pane.getSelectionModel().select(tab);
+			}
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@FXML
+	public void abreCadastroLivro() {
+		try {
+			boolean aberta = false;
+			for (Tab tb : pane.getTabs()) {
+				if(tb.getText().equals("Cadastro de Livros"))
+					aberta = true;
+			}
+			if(!aberta) {
+				Tab tab = new Tab("Cadastro de Livros");
+				tab.setClosable(true);
+				pane.getTabs().add(tab);
+				tab.setContent((Node) FXMLLoader.load(getClass().getResource("Livro.fxml")));
 				pane.getSelectionModel().select(tab);
 			}
 			
