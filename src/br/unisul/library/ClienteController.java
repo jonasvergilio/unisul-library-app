@@ -69,7 +69,9 @@ public class ClienteController {
 	@FXML
 	public void save() {
 		if(selectedCliente == null) {
-			insertCliente();
+			insert();
+			
+			clearClienteScreen();
 		} else {
 			update();
 
@@ -144,7 +146,19 @@ public class ClienteController {
 	}
 
 	private Cliente getClienteScreen() {
-		Cliente cliente = new Cliente(txtNome.getText(), txtCpf.getText(), txtNascimento.getText(), txtTelefone.getText(), txtEmail.getText());
+		String nome = txtNome.getText().trim(),
+				cpf = txtCpf.getText().trim(),
+				nascimento = txtNascimento.getText().trim(),
+				telefone = txtTelefone.getText().trim(),
+				email = txtEmail.getText().trim();
+		
+		if(nome == "" || cpf == "" || nascimento == "" || telefone == "" || email == "") {
+			System.out.println("Todos os campos são obrigatório!!");
+			
+			return null;
+		};
+
+		Cliente cliente = new Cliente(nome, cpf, nascimento, telefone, email);
 
 		if (selectedCliente != null) {
 			cliente.setId(selectedCliente.getId());
@@ -153,26 +167,30 @@ public class ClienteController {
 		return cliente;
 	}
 	
-	private void insertCliente() {
+	private void insert() {
 		String sql = "INSERT INTO cliente (nome, cpf, nascimento, telefone, email) VALUES (?, ?, ?, ?, ?)";
 		
 		Cliente cliente = getClienteScreen();
 		
-		try {
-			Connection connection = Conexao.conectaSqlite();
-			PreparedStatement ps = connection.prepareStatement(sql);
-			
-			ps.setString(1, cliente.getNome());
-			ps.setString(2, cliente.getCpf());
-			ps.setString(3, cliente.getNascimento());
-			ps.setString(4, cliente.getTelefone());
-			ps.setString(5, cliente.getEmail());
-			
-			ps.executeUpdate();
-			
-			connection.close();
-		} catch (Exception e) {
-			e.printStackTrace();
+		if (cliente != null) {
+			try {
+				Connection connection = Conexao.conectaSqlite();
+				PreparedStatement ps = connection.prepareStatement(sql);
+				
+				ps.setString(1, cliente.getNome());
+				ps.setString(2, cliente.getCpf());
+				ps.setString(3, cliente.getNascimento());
+				ps.setString(4, cliente.getTelefone());
+				ps.setString(5, cliente.getEmail());
+				
+				ps.executeUpdate();
+				
+				connection.close();
+				
+				selectAll();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}			
 		}
 	}
 	
@@ -206,26 +224,28 @@ public class ClienteController {
 		String updateSql = "UPDATE cliente SET nome=?, cpf=?, nascimento=?, telefone=?, email=? WHERE id=?";
 
 		Cliente cliente = getClienteScreen();
-
-		try {
-			Connection connection = Conexao.conectaSqlite();
-
-			PreparedStatement ps = connection.prepareStatement(updateSql);
-
-			ps.setString(1, cliente.getNome());
-			ps.setString(2, cliente.getCpf());
-			ps.setString(3, cliente.getNascimento());
-			ps.setString(4, cliente.getTelefone());
-			ps.setString(5, cliente.getEmail());
-			ps.setInt(6, cliente.getId());
-
-			ps.executeUpdate();
-
-			connection.close();
-
-			selectAll();
-		} catch (Exception e) {
-			e.printStackTrace();
+		
+		if (cliente != null) {
+			try {
+				Connection connection = Conexao.conectaSqlite();
+				
+				PreparedStatement ps = connection.prepareStatement(updateSql);
+				
+				ps.setString(1, cliente.getNome());
+				ps.setString(2, cliente.getCpf());
+				ps.setString(3, cliente.getNascimento());
+				ps.setString(4, cliente.getTelefone());
+				ps.setString(5, cliente.getEmail());
+				ps.setInt(6, cliente.getId());
+				
+				ps.executeUpdate();
+				
+				connection.close();
+				
+				selectAll();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}			
 		}
 	}
 }
