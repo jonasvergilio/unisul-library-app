@@ -7,17 +7,21 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 
 public class MainController {
-	
 	@FXML TabPane pane;
 	
 	@FXML
 	public void abreCadastroCliente() {
 		try {
 			boolean aberta = false;
+
 			for (Tab tb : pane.getTabs()) {
-				if(tb.getText().equals("Cadastro de Clientes"))
+				if(tb.getText().equals("Cadastro de Clientes")) {
 					aberta = true;
+					
+					pane.getSelectionModel().select(tb);
+				}
 			}
+			
 			if(!aberta) {
 				Tab tab = new Tab("Cadastro de Clientes");
 				tab.setClosable(true);
@@ -25,8 +29,6 @@ public class MainController {
 				tab.setContent((Node) FXMLLoader.load(getClass().getResource("Cliente.fxml")));
 				pane.getSelectionModel().select(tab);
 			}
-			
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -36,10 +38,15 @@ public class MainController {
 	public void abreCadastroLivro() {
 		try {
 			boolean aberta = false;
+
 			for (Tab tb : pane.getTabs()) {
-				if(tb.getText().equals("Cadastro de Livros"))
+				if(tb.getText().equals("Cadastro de Livros")) {
 					aberta = true;
+				
+					pane.getSelectionModel().select(tb);
+				}
 			}
+
 			if(!aberta) {
 				Tab tab = new Tab("Cadastro de Livros");
 				tab.setClosable(true);
@@ -47,12 +54,8 @@ public class MainController {
 				tab.setContent((Node) FXMLLoader.load(getClass().getResource("Livro.fxml")));
 				pane.getSelectionModel().select(tab);
 			}
-			
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	
 }
