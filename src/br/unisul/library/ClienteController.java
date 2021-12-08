@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import br.unisul.library.model.Cliente;
 import br.unisul.library.util.Conexao;
+import br.unisul.library.util.Messages;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
@@ -153,11 +154,10 @@ public class ClienteController {
 				email = txtEmail.getText().trim();
 
 		if (nome == "" || cpf == "" || nascimento == "" || telefone == "" || email == "") {
-			System.out.println("Todos os campos são obrigatórios!!");
+			Messages.errorMessage("Erro", "Preencha todos os dados para salvar o cliente!");
 
 			return null;
 		}
-		;
 
 		Cliente cliente = new Cliente(nome, cpf, nascimento, telefone, email);
 
@@ -253,27 +253,28 @@ public class ClienteController {
 	
 	@FXML
 	private void delete() {
-		String sqlDelete = "delete from cliente where id=?";
+		String sqlDelete = "DELETE FROM cliente WHERE id=?";
 
-		Cliente cliente = getClienteScreen();
+		if (selectedCliente == null) {
+			Messages.errorMessage("Erro", "Selecione um cliente antes de excluir!");
+			return;
+		}
+		
+		try {
+			Connection connection = Conexao.conectaSqlite();
+			PreparedStatement ps = connection.prepareStatement(sqlDelete);
 
-		if (cliente != null) {
-			try {
-				Connection connection = Conexao.conectaSqlite();
-				PreparedStatement ps = connection.prepareStatement(sqlDelete);
+			ps.setInt(1, selectedCliente.getId());
 
-				ps.setInt(1, selectedCliente.getId());
+			ps.executeUpdate();
 
-				ps.executeUpdate();
+			connection.close();
 
-				connection.close();
-
-				selectAll();
-				
-				clearClienteScreen();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			selectAll();
+			
+			clearClienteScreen();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 }
