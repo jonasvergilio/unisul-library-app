@@ -260,6 +260,12 @@ public class ClienteController {
 			return;
 		}
 		
+		String deleteConfirmation = Messages.confirmationMessage("Confirmação", "Deseja Excluir?").getText();
+		System.out.println(deleteConfirmation);
+		if (!deleteConfirmation.equals("OK")) {
+			return;
+		}
+		
 		try {
 			Connection connection = Conexao.conectaSqlite();
 			PreparedStatement ps = connection.prepareStatement(sqlDelete);

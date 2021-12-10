@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import br.unisul.library.model.Livro;
 import br.unisul.library.util.Conexao;
+import br.unisul.library.util.Messages;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
@@ -43,7 +44,7 @@ public class LivroController {
 	TableColumn<Livro, String> colIsbn;
 
 	@FXML
-	TableColumn<Livro, String> colQuantidade;
+	TableColumn<Livro, Number> colQuantidade;
 
 	private ArrayList<Livro> livros = new ArrayList<Livro>();
 	private Livro selectedLivro = null;
@@ -84,7 +85,7 @@ public class LivroController {
 				txtTitulo.setText(selectedLivro.getTitulo());
 				txtAutor.setText(selectedLivro.getAutor());
 				txtIsbn.setText(selectedLivro.getIsbn());
-				txtQuantidade.setText(selectedLivro.getQuantidade());
+				txtQuantidade.setText(selectedLivro.getQuantidade() + "");
 
 				return;
 			}
@@ -113,7 +114,7 @@ public class LivroController {
 
 				while (result.next()) {
 					Livro livro = new Livro(result.getInt("id"), result.getString("titulo"), result.getString("autor"),
-							result.getString("isbn"), result.getString("quantidade"));
+							result.getString("isbn"), result.getInt("quantidade"));
 
 					livros.add(livro);
 				}
@@ -144,12 +145,13 @@ public class LivroController {
 				quantidade = txtQuantidade.getText().trim();
 
 		if (titulo == "" || autor == "" || isbn == "" || quantidade == "") {
-			System.out.println("Todos os campos são obrigatórios!!");
+
+			Messages.errorMessage("Erro", "Preencha todos os dados para salvar o livro!");
 
 			return null;
 		}
 
-		Livro livro = new Livro(titulo, autor, isbn, quantidade);
+		Livro livro = new Livro(titulo, autor, isbn, Integer.parseInt(quantidade));
 
 		if (selectedLivro != null) {
 			livro.setId(selectedLivro.getId());
@@ -171,7 +173,7 @@ public class LivroController {
 				ps.setString(1, livro.getTitulo());
 				ps.setString(2, livro.getAutor());
 				ps.setString(3, livro.getIsbn());
-				ps.setString(4, livro.getQuantidade());
+				ps.setInt(4, livro.getQuantidade());
 
 				ps.executeUpdate();
 
@@ -198,7 +200,7 @@ public class LivroController {
 
 			while (result.next()) {
 				Livro livro = new Livro(result.getInt("id"), result.getString("titulo"), result.getString("autor"),
-						result.getString("isbn"), result.getString("quantidade"));
+						result.getString("isbn"), result.getInt("quantidade"));
 
 				livros.add(livro);
 			}
@@ -225,7 +227,7 @@ public class LivroController {
 				ps.setString(1, livro.getTitulo());
 				ps.setString(2, livro.getAutor());
 				ps.setString(3, livro.getIsbn());
-				ps.setString(4, livro.getQuantidade());
+				ps.setInt(4, livro.getQuantidade());
 				ps.setInt(5, livro.getId());
 
 				ps.executeUpdate();
@@ -241,29 +243,45 @@ public class LivroController {
 
 	@FXML
 	private void delete() {
-		String sqlDelete = "delete from livro where id=?";
 
-		Livro livro = getLivroScreen();
-
-		if (livro != null) {
-			try {
-				Connection connection = Conexao.conectaSqlite();
-				PreparedStatement ps = connection.prepareStatement(sqlDelete);
-
-				ps.setInt(1, selectedLivro.getId());
-
-				ps.executeUpdate();
-
-				connection.close();
-
-				selectAll();
-
-				clearLivroScreen();
-				;
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+		if (selectedLivro == null) {
+			Messages.errorMessage("Erro", "Selecione um livro antes de excluir!");
+			return;
 		}
+		String deleteConfirmation = Messages.confirmationMessage("Confirmação", "Deseja Excluir?").getText();
+		if (!deleteConfirmation.equals("OK")) {
+			return;
+		}
+		try {
+			PreparedStatement ps = null;
+			Connection connection = Conexao.conectaSqlite();
+
+			if (selectedLivro.getQuantidade() > 1) {
+
+				String sql = "UPDATE livro SET quantidade =" + (selectedLivro.getQuantidade() - 1) + " WHERE id=?";
+
+				ps = connection.prepareStatement(sql);
+
+			} else {
+				String sqlDelete = "delete from livro where id=?";
+
+				ps = connection.prepareStatement(sqlDelete);
+
+			}
+
+			ps.setInt(1, selectedLivro.getId());
+
+			ps.executeUpdate();
+
+			connection.close();
+
+			selectAll();
+
+			clearLivroScreen();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 
 }

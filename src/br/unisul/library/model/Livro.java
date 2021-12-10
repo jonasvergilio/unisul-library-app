@@ -10,12 +10,12 @@ public class Livro {
 	private StringProperty titulo = new SimpleStringProperty("");
 	private StringProperty autor = new SimpleStringProperty("");
 	private StringProperty isbn = new SimpleStringProperty("");
-	private StringProperty quantidade = new SimpleStringProperty("");
+	private IntegerProperty quantidade = new SimpleIntegerProperty(0);
 
 	public Livro() {
 	}
 
-	public Livro(int id, String titulo, String autor, String isbn, String quantidade) {
+	public Livro(int id, String titulo, String autor, String isbn, Integer quantidade) {
 		setId(id);
 		setTitulo(titulo);
 		setAutor(autor);
@@ -23,7 +23,7 @@ public class Livro {
 		setQuantidade(quantidade);
 	}
 
-	public Livro(String titulo, String autor, String isbn, String quantidade) {
+	public Livro(String titulo, String autor, String isbn, Integer quantidade) {
 		setTitulo(titulo);
 		setAutor(autor);
 		setIsbn(isbn);
@@ -66,15 +66,15 @@ public class Livro {
 		this.isbnProperty().set(isbn);
 	}
 
-	public final StringProperty quantidadeProperty() {
+	public final IntegerProperty quantidadeProperty() {
 		return this.quantidade;
 	}
 
-	public final String getQuantidade() {
+	public final int getQuantidade() {
 		return this.quantidadeProperty().get();
 	}
 
-	public final void setQuantidade(final String quantidade) {
+	public final void setQuantidade(final int quantidade) {
 		this.quantidadeProperty().set(quantidade);
 	}
 
